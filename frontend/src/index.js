@@ -6,6 +6,7 @@ import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LoginPage from "./components/pages/login";
 import RegisterPage from "./components/pages/register";
+import ESIcallback from "./components/esicallback";
 
 import { LoginRoute } from "routes/LoginRoute";
 
@@ -20,6 +21,7 @@ ReactDOM.render(
                     component={RegisterPage}
                     noLayout
                 />
+                <Route path="/ESICallback" component={ESIcallback} noLayout />
                 <LoginRoute exact path="/" component={App} />
             </Switch>
         </div>

@@ -5,7 +5,7 @@ export const LoginRoute = ({ component: Component, ...rest }) => (
     <Route
         {...rest}
         render={props =>
-            localStorage.getItem("current_user") ? (
+            localStorage.getItem("token") ? (
                 <Component {...props} />
             ) : (
                 <Redirect

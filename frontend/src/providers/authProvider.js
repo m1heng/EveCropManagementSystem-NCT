@@ -21,19 +21,17 @@ function login(credentials) {
         })
         .then(({ token }) => {
             const decodedToken = decodeJwt(token);
-            const current_user = {
-                token: token,
-                pid: decodedToken.pid,
-                role: decodedToken.tole
-            };
-
-            localStorage.setItem("current_user", current_user);
-            return current_user;
+            localStorage.setItem("token", token);
+            localStorage.setItem("pid", decodedToken.pid);
+            localStorage.setItem("role", decodedToken.role);
         });
 }
 
 function logout() {
-    localStorage.removeItem("current_user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("pid");
+    localStorage.removeItem("role");
+    window.location.reload();
 }
 
 function isDicrector() {}
@@ -43,5 +41,6 @@ function isAdmin() {}
 function isFC() {}
 
 export const authProvider = {
-    login
+    login,
+    logout
 };

@@ -10,6 +10,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 
 import { ESI_LOGIN_URL, ESI_CHAR_AV_URL } from "Constants";
+import { nctProvider } from "providers/nctProvider";
 
 const style = theme => ({
     root: {
@@ -47,10 +48,10 @@ const CharacterList = ({ charcters = [], classes }) => (
 
         <List dense={true}>
             {charcters.map(char => (
-                <ListItem key={char.id}>
+                <ListItem key={char.esi_id}>
                     <Avatar
                         className={classes.avatar}
-                        src={`${ESI_CHAR_AV_URL}/95887944_32.jpg`}
+                        src={`${ESI_CHAR_AV_URL}/${char.esi_id}_32.jpg`}
                     />
 
                     <ListItemText
@@ -58,6 +59,18 @@ const CharacterList = ({ charcters = [], classes }) => (
                             char.add_on
                         ).toLocaleString("en-GB")}`}
                     />
+                    <Button
+                        size="medium"
+                        color="primary"
+                        onClick={() =>
+                            nctProvider.deleteChar(
+                                localStorage.getItem("pid"),
+                                char.esi_id
+                            )
+                        }
+                    >
+                        删除
+                    </Button>
                 </ListItem>
             ))}
         </List>

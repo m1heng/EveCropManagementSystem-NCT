@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
 import CharacterList from "./charlist";
 import UserInfo from "./userinfo";
+
+import { nctProvider } from "providers/nctProvider";
+import userinfo from "./userinfo";
 
 const styles = theme => ({
     root: {
@@ -22,36 +24,13 @@ class UserMainPage extends React.Component {
     state = {};
 
     componentDidMount() {
-        this.setState({
-            user: {
-                email: "someemail",
-                chinese_alias: "米感觉",
-                english_alias: "niubi",
-                qq: "5465464566",
-                registered_on: "2019-01-01T00:55:12.016087"
-            },
-            charlist: [
-                {
-                    id: "1",
-                    name: "666niubi",
-                    add_on: "2019-01-01T00:55:12.016087"
-                },
-                {
-                    id: "2",
-                    name: "666niubi",
-                    add_on: "2019-01-01T00:55:12.016087"
-                },
-                {
-                    id: "3",
-                    name: "666niubi",
-                    add_on: "2019-01-01T00:55:12.016087"
-                },
-                {
-                    id: "4",
-                    name: "666niubi",
-                    add_on: "2019-01-01T00:55:12.016087"
-                }
-            ]
+        const pid = localStorage.getItem("pid");
+        nctProvider.getUserInfo(pid).then(info => {
+            this.setState({ user: info });
+        });
+
+        nctProvider.getCharList(pid).then(data => {
+            this.setState({ charlist: data });
         });
     }
 

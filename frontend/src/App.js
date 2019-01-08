@@ -5,11 +5,15 @@ import { Dashboard } from "./components/dashboard";
 import UserMainPage from "./components/pages/UserMainPage/UserMainPage";
 import "./App.css";
 
+import { LoginRoute } from "routes/LoginRoute";
+
 class App extends Component {
     render() {
         return (
             <div>
-                <Dashboard>something</Dashboard>
+                <Dashboard>
+                    <LoginRoute exact path="/" component={UserMainPage} />
+                </Dashboard>
             </div>
         );
     }

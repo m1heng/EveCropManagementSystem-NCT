@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { NCT_API_URL } from "Constants";
 import decodeJwt from "jwt-decode";
 
 export default class ESIcallback extends Component {
@@ -31,45 +32,54 @@ export default class ESIcallback extends Component {
             }
         })
             .then(response => {
-                console.log(response.data);
-                console.log(response.refresh_token);
-                this.setState({
+                const AuthResponse = {
                     esi_access_token: response.data.access_token,
                     esi_refresh_token: response.data.refresh_token
-                });
-                axios({
+                };
+                return AuthResponse;
+            })
+            .then(AuthResponse => {
+                return axios({
                     method: "get",
                     url: `https://cors-anywhere.herokuapp.com/https://esi.tech.ccp.is/verify/`,
                     headers: {
-                        Authorization: `Bearer ${this.state.esi_access_token}`
+                        Authorization: `Bearer ${
+                            AuthResponse.esi_access_token
+                        }`,
+                        Pragma: "no-cache"
                     }
                 })
-                    .then(res => {
-                        this.setState({
-                            esi_char_info: res.data
-                        });
+                    .then(response => {
+                        const VerifyResponse = response.data;
+                        return VerifyResponse;
+                    })
+                    .then(VerifyResponse => {
+                        console.log(VerifyResponse);
                         axios({
                             method: "post",
-                            url: `http://127.0.0.1:5000/characters/${localStorage.getItem(
+                            url: `${NCT_API_URL}/characters/${localStorage.getItem(
                                 "pid"
                             )}`,
                             headers: {
                                 "x-access-token": localStorage.getItem("token")
                             },
                             data: {
-                                esi_id: this.state.esi_char_info.CharacterID,
-                                name: this.state.esi_char_info.CharacterName,
-                                esi_refresh_token: this.state.esi_refresh_token
+                                esi_id: VerifyResponse.CharacterID,
+                                name: VerifyResponse.CharacterName,
+                                esi_refresh_token:
+                                    AuthResponse.esi_refresh_token
                             }
                         })
                             .then(resp => {
                                 console.log(resp);
+
+                                this.props.history.push("/");
                             })
                             .catch(error => {});
                     })
                     .catch(error => {});
             })
-            .catch(errror => {});
+            .catch(error => {});
     }
     render() {
         return <h1>加载中</h1>;

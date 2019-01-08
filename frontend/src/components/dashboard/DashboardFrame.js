@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { UserListItems, DirectorListItems } from "./Leftmenuitems";
+import { authProvider } from "providers/authProvider";
 
 const drawerWidth = 180;
 
@@ -142,7 +143,12 @@ class DashboardFrame extends React.Component {
                         >
                             九州 ESI 系统
                         </Typography>
-                        <IconButton color="inherit">登出</IconButton>
+                        <IconButton
+                            onClick={authProvider.logout}
+                            color="inherit"
+                        >
+                            登出
+                        </IconButton>
                     </Toolbar>
                 </AppBar>
                 <Drawer
