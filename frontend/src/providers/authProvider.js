@@ -34,7 +34,7 @@ function logout() {
     window.location.reload();
 }
 
-function isDicrector() {
+function isDirector() {
     const current_role = localStorage.getItem("role");
     return current_role.includes("director") ? true : false;
 }
@@ -62,7 +62,7 @@ function isMember() {
 export const authProvider = {
     login,
     logout,
-    isDicrector,
+    isDirector,
     isAdmin,
     isFC,
     isHR,

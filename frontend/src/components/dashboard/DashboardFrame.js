@@ -92,7 +92,6 @@ const styles = theme => ({
     appBarSpacer: theme.mixins.toolbar,
     content: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 3,
         height: "100vh",
         overflow: "auto"
     },
@@ -182,7 +181,7 @@ class DashboardFrame extends React.Component {
                     <Divider />
                     <List>
                         <div>
-                            <ListItem button>
+                            <ListItem button component={Link} to="/">
                                 <ListItemIcon>
                                     <DashboardIcon />
                                 </ListItemIcon>
@@ -214,7 +213,7 @@ class DashboardFrame extends React.Component {
                     </List>
                     <Divider />
                     <List>
-                        {(authProvider.isDicrector() ||
+                        {(authProvider.isDirector() ||
                             authProvider.isAdmin()) && (
                             <div>
                                 <ListSubheader inset>管理界面</ListSubheader>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NCT_API_URL } from "Constants";
+import { authProvider } from "./authProvider";
 
 function getUserInfo(pid) {
     const current_pid = localStorage.getItem("pid");
@@ -23,21 +24,24 @@ function getUserInfo(pid) {
 
 function getUserList() {
     const current_role = localStorage.getItem("role");
-    if (current_role !== "admin" || current_role !== "director") {
+    if (!authProvider.isAdmin() || !authProvider.isDirector()) {
         return Promise.reject("Unauthorized");
     }
     const current_pid = localStorage.getItem("pid");
     const current_token = localStorage.getItem("token");
+    console.log("here");
 
     return axios({
         headers: { "x-access-token": current_token },
-        usl: `${NCT_API_URL}/users`,
+        url: `${NCT_API_URL}/users/`,
         method: "get"
     })
         .then(response => {
             return response.data;
         })
-        .catch(err => {});
+        .catch(err => {
+            console.log(err);
+        });
 }
 
 function getCharList(pid) {
@@ -102,5 +106,6 @@ function deleteChar(pid, char_esi_id) {
 export const nctProvider = {
     getUserInfo,
     getCharList,
-    deleteChar
+    deleteChar,
+    getUserList
 };

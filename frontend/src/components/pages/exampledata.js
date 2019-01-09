@@ -28,6 +28,18 @@ import {
 
 import { tasks, employees, priorities } from "../data.json";
 
+function something(users, chars) {
+    users.map(user => {
+        user.charas = [];
+        return chars.map(char => {
+            if (char.user_id === user.id) {
+                user.charas.push(char);
+                return user;
+            }
+        });
+    });
+}
+
 const EmployeeFormatter = ({ row }) => (
     <div
         style={{

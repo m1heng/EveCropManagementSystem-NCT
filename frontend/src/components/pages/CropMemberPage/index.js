@@ -5,13 +5,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
+import MemberView from "./MemberView";
+import { nctProvider } from "providers/nctProvider";
 
 function TabContainer(props) {
-    return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
-            {props.children}
-        </Typography>
-    );
+    return <Typography component="div">{props.children}</Typography>;
 }
 
 TabContainer.propTypes = {
@@ -27,12 +25,20 @@ const styles = theme => ({
 
 class CropMemberPage extends React.Component {
     state = {
-        value: 0
+        value: 0,
+        users: []
     };
 
     handleChange = (event, value) => {
         this.setState({ value });
     };
+
+    componentDidMount() {
+        nctProvider.getUserList().then(data => {
+            console.log(data);
+            this.setState({ users: data });
+        });
+    }
 
     render() {
         const { classes } = this.props;
@@ -42,14 +48,16 @@ class CropMemberPage extends React.Component {
             <div className={classes.root}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
-                        <Tab label="Item One" />
-                        <Tab label="Item Two" />
-                        <Tab label="Item Three" />
+                        <Tab label="成员列表" />
+                        <Tab label="角色列表" />
                     </Tabs>
                 </AppBar>
-                {value === 0 && <TabContainer>Item One</TabContainer>}
+                {value === 0 && (
+                    <TabContainer>
+                        {/* <MemberView users={this.state.users} /> */}
+                    </TabContainer>
+                )}
                 {value === 1 && <TabContainer>Item Two</TabContainer>}
-                {value === 2 && <TabContainer>Item Three</TabContainer>}
             </div>
         );
     }

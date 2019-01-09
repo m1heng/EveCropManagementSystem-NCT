@@ -14,7 +14,7 @@ class UserList(Resource):
     @api.doc('list_of_registered_users')
     @dicrector_required
     @api.marshal_list_with(_user)
-    def get(self):
+    def get(current_user,self):
         """List all registered users"""
         return get_all_users()
 

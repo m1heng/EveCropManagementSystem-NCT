@@ -14,7 +14,9 @@ import { nctProvider } from "providers/nctProvider";
 
 const style = theme => ({
     root: {
-        flex: 1
+        flex: 1,
+        marginTop: theme.spacing.unit * 2,
+        marginRight: theme.spacing.unit * 2
     },
     cost: {
         marginRight: "1em",

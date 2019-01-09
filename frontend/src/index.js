@@ -22,7 +22,7 @@ ReactDOM.render(
                     noLayout
                 />
                 <Route path="/ESICallback" component={ESIcallback} noLayout />
-                <LoginRoute exact path="/" component={App} />
+                <LoginRoute path="/" component={App} />
             </Switch>
         </div>
     </Router>,
