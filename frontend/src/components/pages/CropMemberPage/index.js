@@ -26,23 +26,68 @@ const styles = theme => ({
 class CropMemberPage extends React.Component {
     state = {
         value: 0,
-        users: []
-    };
+        users: null,
+        test:[
+            {
+                "email": "111",
+                "public_id": "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48ec",
+                "registered_on": "2019-01-09T04:18:45.735534",
+                "admin": false,
+                "fc": false,
+                "member": true,
+                "hr": false,
+                "director": false,
+                "chinese_alias": "111",
+                "english_alias": "111",
+                "qq": "111"
+            },
+            {
+                "email": "nct@admin",
+                "public_id": "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48e5",
+                "registered_on": "2019-01-09T04:18:45.735534",
+                "admin": true,
+                "fc": true,
+                "member": true,
+                "hr": true,
+                "director": true,
+                "chinese_alias": "232",
+                "english_alias": "232",
+                "qq": "232"
+            }
+        ]
+    }
+    
+    constructor(props){
+        super(props);
+    }
 
     handleChange = (event, value) => {
         this.setState({ value });
     };
 
-    componentDidMount() {
-        nctProvider.getUserList().then(data => {
-            console.log(data);
-            this.setState({ users: data });
+    componentWillMount() {
+        nctProvider.getUserList().then(userList => {
+            nctProvider.getAllCharList().then(allcharList =>{
+                userList.map(user => {
+                    user.characters = [];
+                    return allcharList.map(char => {
+                        if (char.user_id === user.id) {
+                            user.characters.push(char);
+                            return user;
+                        }
+                    });
+                });
+                console.log(allcharList);
+                this.setState({allCharist : allcharList});
+            })
+            console.log(userList)
+            this.setState({ users: userList });
         });
     }
 
     render() {
         const { classes } = this.props;
-        const { value } = this.state;
+        const { value, users } = this.state;
 
         return (
             <div className={classes.root}>
@@ -54,7 +99,7 @@ class CropMemberPage extends React.Component {
                 </AppBar>
                 {value === 0 && (
                     <TabContainer>
-                        {/* <MemberView users={this.state.users} /> */}
+                         {users && <MemberView users={users} />}
                     </TabContainer>
                 )}
                 {value === 1 && <TabContainer>Item Two</TabContainer>}

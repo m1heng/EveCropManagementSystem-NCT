@@ -4,6 +4,7 @@ from flask_restplus import Namespace, fields
 class UserDto:
     api = Namespace('users', description='user related operations')
     user = api.model('users', {
+        'id': fields.Integer(),
         'email': fields.String(required=True, description='user email address'),
         'public_id': fields.String(description='user Identifier'),
         'registered_on': fields.DateTime(),
@@ -29,6 +30,7 @@ class AuthDto:
 class CharDto:
     api = Namespace('characters')
     character = api.model('character', {
+        'user_id': fields.Integer(),
         'esi_id': fields.Integer(),
         'name': fields.String(),
         'add_on': fields.DateTime(),

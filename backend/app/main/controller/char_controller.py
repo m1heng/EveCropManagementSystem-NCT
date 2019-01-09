@@ -12,7 +12,7 @@ _char = CharDto.character
 class AllChar(Resource):
     @dicrector_required
     @api.marshal_list_with(_char)
-    def get(self):
+    def get(current_user,self):
         return get_all_characters()
 
 

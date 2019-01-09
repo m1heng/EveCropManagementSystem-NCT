@@ -44,6 +44,28 @@ function getUserList() {
         });
 }
 
+function getAllCharList() {
+    const current_role = localStorage.getItem("role");
+    if (!authProvider.isAdmin() || !authProvider.isDirector()) {
+        return Promise.reject("Unauthorized");
+    }
+    const current_pid = localStorage.getItem("pid");
+    const current_token = localStorage.getItem("token");
+    console.log("here");
+
+    return axios({
+        headers: { "x-access-token": current_token },
+        url: `${NCT_API_URL}/characters/`,
+        method: "get"
+    })
+        .then(response => {
+            return response.data;
+        })
+        .catch(err => {
+            console.log(err);
+        });
+}
+
 function getCharList(pid) {
     const current_pid = localStorage.getItem("pid");
     const current_role = localStorage.getItem("role");
@@ -107,5 +129,6 @@ export const nctProvider = {
     getUserInfo,
     getCharList,
     deleteChar,
-    getUserList
+    getUserList,
+    getAllCharList
 };
