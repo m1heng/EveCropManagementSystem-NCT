@@ -9,6 +9,8 @@ class UserDto:
         'registered_on': fields.DateTime(),
         'admin': fields.Boolean(),
         'fc': fields.Boolean(),
+        'member': fields.Boolean(),
+        'hr': fields.Boolean(),
         'director': fields.Boolean(),
         'chinese_alias': fields.String(),
         'english_alias': fields.String(),

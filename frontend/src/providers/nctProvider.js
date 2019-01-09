@@ -16,6 +16,7 @@ function getUserInfo(pid) {
         url: `${NCT_API_URL}/users/${current_pid}`,
         method: "get"
     }).then(res => {
+        console.log(res.data);
         return res.data;
     });
 }

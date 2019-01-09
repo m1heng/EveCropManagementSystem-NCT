@@ -59,7 +59,9 @@ def register_user(json_data):
             password = json_data['password'],
             chinese_alias = json_data['chinese_alias'],
             english_alias = json_data['english_alias'],
-            qq = json_data['qq'])
+            qq = json_data['qq'],
+            member = True) # before hr part is working 
+
         db.session.add(new_user)
         db.session.commit()
 
@@ -116,11 +118,9 @@ def role_operation(json_data,target_user_pid):
         }
         return response_body, 404
 
-    op = json_data['director']
-
-    if op :
-        target_user.director = op
-
+    for role in json_data:
+        target_user[role] = json_data[role]
+    db.session.commit()
 
     response_body = {
         'status': 'success',

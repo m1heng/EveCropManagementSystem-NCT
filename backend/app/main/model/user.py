@@ -14,12 +14,24 @@ class User(db.Model):
     public_id = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
-    admin = db.Column(db.Boolean, nullable=False, default=False)
-    director = db.Column(db.Boolean, nullable=False, default=False)
-    fc = db.Column(db.Boolean, nullable=False, default=False)
+    '''
+    role: 
+        possible values: 
+            guest   : user without member role are considered as guest 
+            member  : normal member have no access to manage panel
+            fc      : have access to add fleet 
+            hr      : have access to hiring and pre-esi-check
+            director: have access to all
+            admin   : add and delete all role of all user
+    '''
+    member = db.Column(db.Boolean, default=False)
+    fc = db.Column(db.Boolean, default=False)
+    hr = db.Column(db.Boolean, default=False)
+    director = db.Column(db.Boolean, default=False)
+    admin = db.Column(db.Boolean, default=False)
+
     password_hash = db.Column(db.String(64), nullable=False)
 
-    #will be updated after user's first login
     chinese_alias = db.Column(db.String(50), unique = True)
     english_alias = db.Column(db.String(50), unique = True)
     qq = db.Column(db.String(20), unique = True)
@@ -37,10 +49,23 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     def to_token(self):
+        role = ""
+        if self.member:
+            role += 'member,'
+        if self.fc:
+            role += 'fc,'
+        if self.hr:
+            role += 'hr,'
+        if self.director:
+            role += 'director,'
+        if self.admin:
+            role += 'admin'
+
         payload  = {
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=45),
             'iat': datetime.datetime.utcnow(),
-            'pid': self.public_id            
+            'pid': self.public_id,
+            'role': role            
         }
         return jwt.encode(payload, key, algorithm='HS256')
 

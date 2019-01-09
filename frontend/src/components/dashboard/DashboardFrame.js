@@ -12,8 +12,20 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { UserListItems, DirectorListItems } from "./Leftmenuitems";
 import { authProvider } from "providers/authProvider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import AccessibleIcon from "@material-ui/icons/Accessible";
+import GradeIcon from "@material-ui/icons/Grade";
+import FlightIcon from "@material-ui/icons/Flight";
+import PeopleIcon from "@material-ui/icons/People";
+import BuildIcon from "@material-ui/icons/Build";
+import ChildCareIcon from "@material-ui/icons/ChildCare";
+import blue from "@material-ui/core/colors/blue";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 180;
 
@@ -22,7 +34,8 @@ const styles = theme => ({
         display: "flex"
     },
     toolbar: {
-        paddingRight: 24 // keep right padding when drawer closed
+        paddingRight: 24, // keep right padding when drawer closed
+        backgroundColor: blue[500]
     },
     toolbarIcon: {
         display: "flex",
@@ -167,9 +180,83 @@ class DashboardFrame extends React.Component {
                         </IconButton>
                     </div>
                     <Divider />
-                    <List>{UserListItems}</List>
+                    <List>
+                        <div>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <DashboardIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="主页" />
+                            </ListItem>
+                            {authProvider.isMember() ? (
+                                <div>
+                                    <ListItem button disabled>
+                                        <ListItemIcon>
+                                            <FlightIcon />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={<del>舰队</del>}
+                                        />
+                                    </ListItem>
+                                    <ListItem button disabled>
+                                        <ListItemIcon>
+                                            <AccessibleIcon />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primary={<del>补损</del>}
+                                        />
+                                    </ListItem>
+                                </div>
+                            ) : (
+                                <div />
+                            )}
+                        </div>
+                    </List>
                     <Divider />
-                    <List>{DirectorListItems}</List>
+                    <List>
+                        {(authProvider.isDicrector() ||
+                            authProvider.isAdmin()) && (
+                            <div>
+                                <ListSubheader inset>管理界面</ListSubheader>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to="/cropmain"
+                                >
+                                    <ListItemIcon>
+                                        <GradeIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="军团管理" />
+                                </ListItem>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to="/cropmember"
+                                >
+                                    <ListItemIcon>
+                                        <PeopleIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="军团成员" />
+                                </ListItem>
+                                <ListItem button disabled>
+                                    <ListItemIcon>
+                                        <BuildIcon />
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={<del>战损管理</del>}
+                                    />
+                                </ListItem>
+                                <ListItem button disabled>
+                                    <ListItemIcon>
+                                        <ChildCareIcon />
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={<del>舰队管理</del>}
+                                    />
+                                </ListItem>
+                            </div>
+                        )}
+                    </List>
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer} />

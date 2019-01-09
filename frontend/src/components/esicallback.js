@@ -2,14 +2,24 @@ import React, { Component } from "react";
 import axios from "axios";
 import { NCT_API_URL } from "Constants";
 import decodeJwt from "jwt-decode";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-export default class ESIcallback extends Component {
+const styles = theme => ({
+    progress: {
+        margin: theme.spacing.unit * 2
+    }
+});
+
+class ESIcallback extends Component {
     constructor(props) {
         super(props);
         this.state = {
             esi_access_token: "",
             esi_refresh_token: "",
-            esi_char_info: {}
+            esi_char_info: {},
+            message: "加载中"
         };
     }
     componentDidMount() {
@@ -71,17 +81,77 @@ export default class ESIcallback extends Component {
                             }
                         })
                             .then(resp => {
-                                console.log(resp);
-
-                                this.props.history.push("/");
+                                this.setState({
+                                    message: "成功，正在返回主页"
+                                });
+                                setTimeout(() => {
+                                    this.props.history.push("/");
+                                }, 3000);
                             })
-                            .catch(error => {});
+                            .catch(error => {
+                                if (
+                                    error.response.data.status === "Duplicate"
+                                ) {
+                                    this.setState({
+                                        message: "失败，角色已被注册，正在返回"
+                                    });
+                                } else {
+                                    this.setState({
+                                        message: error.response.data.message
+                                    });
+                                }
+
+                                setTimeout(() => {
+                                    this.props.history.push("/");
+                                }, 5000);
+                            });
                     })
-                    .catch(error => {});
+                    .catch(error => {
+                        this.setState({
+                            message: "ESI Verify Server Error, Contact M1heng"
+                        });
+                        setTimeout(() => {
+                            this.props.history.push("/");
+                        }, 10000);
+                    });
             })
-            .catch(error => {});
+            .catch(error => {
+                this.setState({
+                    message: "ESI Login Server Error, Contact M1heng"
+                });
+                setTimeout(() => {
+                    this.props.history.push("/");
+                }, 10000);
+            });
     }
     render() {
-        return <h1>加载中</h1>;
+        const { classes } = this.props;
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100vh"
+                }}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                >
+                    <CircularProgress className={classes.progress} />
+                    <br />
+                    <h1>{this.state.message}</h1>
+                </div>
+            </div>
+        );
     }
 }
+ESIcallback.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(ESIcallback);

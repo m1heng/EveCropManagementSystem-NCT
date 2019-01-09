@@ -34,6 +34,10 @@ def add_character(current_user, user_pid, data):
         if not target_user:
             return stdJSONresp('fail', 'User not found', 404)
 
+    duplicate_char = Character.query.filter_by(esi_id=data['esi_id']).first()
+    if duplicate_char:
+        return stdJSONresp('Duplicate', 'Character already registered', 400)
+
     try:
         new_char = Character(
             esi_id = data['esi_id'],

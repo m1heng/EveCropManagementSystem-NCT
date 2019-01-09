@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import logo from "./logo.svg";
-import { Dashboard } from "./components/dashboard";
-import UserMainPage from "./components/pages/UserMainPage/UserMainPage";
 import "./App.css";
 
-import { LoginRoute } from "routes/LoginRoute";
+import { Dashboard } from "./components/dashboard";
+import UserMainPage from "./components/pages/UserMainPage/UserMainPage";
+import CropMemberPage from "./components/pages/CropMemberPage";
+import { LoginRoute, CropMangeRoute } from "routes/LoginRoute";
 
 class App extends Component {
     render() {
@@ -13,6 +14,11 @@ class App extends Component {
             <div>
                 <Dashboard>
                     <LoginRoute exact path="/" component={UserMainPage} />
+                    <CropMangeRoute
+                        exact
+                        path="/cropmember"
+                        component={CropMemberPage}
+                    />
                 </Dashboard>
             </div>
         );

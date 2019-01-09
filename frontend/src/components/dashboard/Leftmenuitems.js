@@ -11,28 +11,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import BuildIcon from "@material-ui/icons/Build";
 import ChildCareIcon from "@material-ui/icons/ChildCare";
 
-export const UserListItems = (
-    <div>
-        <ListItem button>
-            <ListItemIcon>
-                <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="主页" />
-        </ListItem>
-        <ListItem button disabled>
-            <ListItemIcon>
-                <FlightIcon />
-            </ListItemIcon>
-            <ListItemText primary={<del>舰队</del>} />
-        </ListItem>
-        <ListItem button disabled>
-            <ListItemIcon>
-                <AccessibleIcon />
-            </ListItemIcon>
-            <ListItemText primary={<del>补损</del>} />
-        </ListItem>
-    </div>
-);
+export const UserListItems = <div />;
 
 export const DirectorListItems = (
     <div>

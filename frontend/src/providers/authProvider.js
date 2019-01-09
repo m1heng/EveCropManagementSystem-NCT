@@ -34,13 +34,37 @@ function logout() {
     window.location.reload();
 }
 
-function isDicrector() {}
+function isDicrector() {
+    const current_role = localStorage.getItem("role");
+    return current_role.includes("director") ? true : false;
+}
 
-function isAdmin() {}
+function isAdmin() {
+    const current_role = localStorage.getItem("role");
+    return current_role.includes("admin") ? true : false;
+}
 
-function isFC() {}
+function isFC() {
+    const current_role = localStorage.getItem("role");
+    return current_role.includes("fc") ? true : false;
+}
+
+function isHR() {
+    const current_role = localStorage.getItem("role");
+    return current_role.includes("hr") ? true : false;
+}
+
+function isMember() {
+    const current_role = localStorage.getItem("role");
+    return current_role.includes("member") ? true : false;
+}
 
 export const authProvider = {
     login,
-    logout
+    logout,
+    isDicrector,
+    isAdmin,
+    isFC,
+    isHR,
+    isMember
 };
