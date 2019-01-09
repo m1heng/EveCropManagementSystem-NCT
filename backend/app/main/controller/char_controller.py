@@ -1,7 +1,7 @@
 from flask import request
 from flask_restplus import Resource
 
-from app.main.util.decorator import dicrector_required, login_required
+from app.main.util.decorator import director_required, login_required
 from ..util.dto import CharDto
 from ..service.char_service import *
 
@@ -10,7 +10,7 @@ _char = CharDto.character
 
 @api.route('/')
 class AllChar(Resource):
-    @dicrector_required
+    @director_required
     @api.marshal_list_with(_char)
     def get(current_user,self):
         return get_all_characters()

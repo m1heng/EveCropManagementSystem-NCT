@@ -67,7 +67,7 @@ def admin_required(f):
     return decorated
 
 
-def dicrector_required(f):
+def director_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         current_user, status = vaildate_token(request.headers)

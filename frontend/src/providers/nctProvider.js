@@ -29,7 +29,6 @@ function getUserList() {
     }
     const current_pid = localStorage.getItem("pid");
     const current_token = localStorage.getItem("token");
-    console.log("here");
 
     return axios({
         headers: { "x-access-token": current_token },
@@ -51,7 +50,6 @@ function getAllCharList() {
     }
     const current_pid = localStorage.getItem("pid");
     const current_token = localStorage.getItem("token");
-    console.log("here");
 
     return axios({
         headers: { "x-access-token": current_token },
@@ -125,10 +123,33 @@ function deleteChar(pid, char_esi_id) {
         .catch(err => {});
 }
 
+function updateRole(pid, new_roles) {
+    if (!authProvider.isAdmin() || !authProvider.isDirector()) {
+        return Promise.reject("Unauthorized");
+    }
+    const current_pid = localStorage.getItem("pid");
+    const current_token = localStorage.getItem("token");
+
+    return axios({
+        headers: { "x-access-token": current_token },
+        url: `${NCT_API_URL}/auth/roleoperation/${pid}`,
+        method: "put",
+        data: new_roles
+    })
+        .then(response => {
+            return response.data;
+        })
+        .catch(err => {
+            console.log(err);
+            return Promise.reject();
+        });
+}
+
 export const nctProvider = {
     getUserInfo,
     getCharList,
     deleteChar,
     getUserList,
-    getAllCharList
+    getAllCharList,
+    updateRole
 };

@@ -6,6 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import MemberView from "./MemberView";
+import CharacterView from "./CharacterView";
 import { nctProvider } from "providers/nctProvider";
 
 function TabContainer(props) {
@@ -27,37 +28,37 @@ class CropMemberPage extends React.Component {
     state = {
         value: 0,
         users: null,
-        test:[
+        test: [
             {
-                "email": "111",
-                "public_id": "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48ec",
-                "registered_on": "2019-01-09T04:18:45.735534",
-                "admin": false,
-                "fc": false,
-                "member": true,
-                "hr": false,
-                "director": false,
-                "chinese_alias": "111",
-                "english_alias": "111",
-                "qq": "111"
+                email: "111",
+                public_id: "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48ec",
+                registered_on: "2019-01-09T04:18:45.735534",
+                admin: false,
+                fc: false,
+                member: true,
+                hr: false,
+                director: false,
+                chinese_alias: "111",
+                english_alias: "111",
+                qq: "111"
             },
             {
-                "email": "nct@admin",
-                "public_id": "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48e5",
-                "registered_on": "2019-01-09T04:18:45.735534",
-                "admin": true,
-                "fc": true,
-                "member": true,
-                "hr": true,
-                "director": true,
-                "chinese_alias": "232",
-                "english_alias": "232",
-                "qq": "232"
+                email: "nct@admin",
+                public_id: "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48e5",
+                registered_on: "2019-01-09T04:18:45.735534",
+                admin: true,
+                fc: true,
+                member: true,
+                hr: true,
+                director: true,
+                chinese_alias: "232",
+                english_alias: "232",
+                qq: "232"
             }
         ]
-    }
-    
-    constructor(props){
+    };
+
+    constructor(props) {
         super(props);
     }
 
@@ -67,7 +68,7 @@ class CropMemberPage extends React.Component {
 
     componentWillMount() {
         nctProvider.getUserList().then(userList => {
-            nctProvider.getAllCharList().then(allcharList =>{
+            nctProvider.getAllCharList().then(allcharList => {
                 userList.map(user => {
                     user.characters = [];
                     return allcharList.map(char => {
@@ -78,16 +79,16 @@ class CropMemberPage extends React.Component {
                     });
                 });
                 console.log(allcharList);
-                this.setState({allCharist : allcharList});
-            })
-            console.log(userList)
+                this.setState({ allcharList: allcharList });
+            });
+            console.log(userList);
             this.setState({ users: userList });
         });
     }
 
     render() {
         const { classes } = this.props;
-        const { value, users } = this.state;
+        const { value, users, allcharList } = this.state;
 
         return (
             <div className={classes.root}>
@@ -99,10 +100,14 @@ class CropMemberPage extends React.Component {
                 </AppBar>
                 {value === 0 && (
                     <TabContainer>
-                         {users && <MemberView users={users} />}
+                        {users && <MemberView users={users} />}
                     </TabContainer>
                 )}
-                {value === 1 && <TabContainer>Item Two</TabContainer>}
+                {value === 1 && (
+                    <TabContainer>
+                        {allcharList && <CharacterView chars={allcharList} />}
+                    </TabContainer>
+                )}
             </div>
         );
     }

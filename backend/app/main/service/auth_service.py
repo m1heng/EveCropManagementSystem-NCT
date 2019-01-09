@@ -118,8 +118,15 @@ def role_operation(json_data,target_user_pid):
         }
         return response_body, 404
 
-    for role in json_data:
-        target_user[role] = json_data[role]
+    if json_data['director']:
+        target_user.director = json_data['director']
+
+    if json_data['hr']:
+        target_user.hr = json_data['hr']
+
+    if json_data['fc']:
+        target_user.fc = json_data['fc']
+
     db.session.commit()
 
     response_body = {

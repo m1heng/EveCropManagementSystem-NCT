@@ -2,7 +2,7 @@ from flask import request, make_response
 from flask_restplus import Resource
 
 from app.main.service.auth_service import login_user, register_user, reset_pass, role_operation
-from app.main.util.decorator import login_required, admin_required
+from app.main.util.decorator import login_required, director_required
 from ..util.dto import AuthDto
 
 api = AuthDto.api
@@ -32,8 +32,8 @@ class Resetpassword(Resource):
 
 @api.route('/roleoperation/<pid>')
 class RoleOp(Resource):
-    @admin_required
-    def put(self):
+    @director_required
+    def put(current_user, self, pid):
         data = request.json
         return role_operation(data, pid)
 

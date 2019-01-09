@@ -1,7 +1,7 @@
 from flask import request
 from flask_restplus import Resource
 
-from app.main.util.decorator import admin_required, dicrector_required, login_required
+from app.main.util.decorator import admin_required, director_required, login_required
 from ..util.dto import UserDto
 from ..service.user_service import get_all_users, get_a_user
 
@@ -12,7 +12,7 @@ _user = UserDto.user
 @api.route('/')
 class UserList(Resource):
     @api.doc('list_of_registered_users')
-    @dicrector_required
+    @director_required
     @api.marshal_list_with(_user)
     def get(current_user,self):
         """List all registered users"""

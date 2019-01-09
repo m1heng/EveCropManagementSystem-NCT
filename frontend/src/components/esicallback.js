@@ -51,7 +51,7 @@ class ESIcallback extends Component {
             .then(AuthResponse => {
                 return axios({
                     method: "get",
-                    url: `https://cors-anywhere.herokuapp.com/https://esi.tech.ccp.is/verify/`,
+                    url: `https://cors-anywhere.herokuapp.com/https://esi.evetech.net/verify/`,
                     headers: {
                         Authorization: `Bearer ${
                             AuthResponse.esi_access_token
