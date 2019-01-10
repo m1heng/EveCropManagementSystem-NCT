@@ -1,6 +1,15 @@
 import axios from "axios";
+import { setupCache } from "axios-cache-adapter";
 import { NCT_API_URL } from "Constants";
 import { authProvider } from "./authProvider";
+
+const cache = setupCache({
+    maxAge: 15 * 60 * 1000
+});
+
+const cachedAxios = axios.create({
+    adapter: cache.adapter
+});
 
 function getUserInfo(pid) {
     const current_pid = localStorage.getItem("pid");
