@@ -27,35 +27,7 @@ const styles = theme => ({
 class CropMemberPage extends React.Component {
     state = {
         value: 0,
-        users: null,
-        test: [
-            {
-                email: "111",
-                public_id: "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48ec",
-                registered_on: "2019-01-09T04:18:45.735534",
-                admin: false,
-                fc: false,
-                member: true,
-                hr: false,
-                director: false,
-                chinese_alias: "111",
-                english_alias: "111",
-                qq: "111"
-            },
-            {
-                email: "nct@admin",
-                public_id: "2fdec22b-ff4e-42fd-bfa6-aeda5d4d48e5",
-                registered_on: "2019-01-09T04:18:45.735534",
-                admin: true,
-                fc: true,
-                member: true,
-                hr: true,
-                director: true,
-                chinese_alias: "232",
-                english_alias: "232",
-                qq: "232"
-            }
-        ]
+        users: null
     };
 
     constructor(props) {
@@ -78,10 +50,8 @@ class CropMemberPage extends React.Component {
                         }
                     });
                 });
-                console.log(allcharList);
                 this.setState({ allcharList: allcharList });
             });
-            console.log(userList);
             this.setState({ users: userList });
         });
     }

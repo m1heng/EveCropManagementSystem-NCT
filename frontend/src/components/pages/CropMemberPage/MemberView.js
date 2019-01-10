@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import {
     FilteringState,
     IntegratedFiltering,
@@ -18,6 +19,7 @@ import {
 
 import { MemberRowDetail } from "./MemberRowDetail";
 import AccessControlDialog from "./AccessControlDialog";
+import CharacterDetailDialog from "./CharacterDetailDialog";
 
 const DateFormatter = ({ value }) => new Date(value).toLocaleString("en-GB");
 
@@ -34,7 +36,9 @@ const RoleTypeProvider = props => (
 class MemberView extends React.Component {
     state = {
         ACDialogOpen: false,
-        ACuser: null
+        ACuser: null,
+        DetailOpen: false,
+        DetailChar: null
     };
 
     constructor(props) {
@@ -51,16 +55,37 @@ class MemberView extends React.Component {
         );
     };
 
+    addCharBtn = ({ index }) => {
+        return (
+            <Button
+                onClick={this.handleDetailButton.bind(this, { index: index })}
+            >
+                ESI详情
+            </Button>
+        );
+    };
+
     handleRoleButton = ({ index }) => {
-        console.log(index);
         this.setState({
             ACDialogOpen: true,
             ACuser: index
         });
     };
 
-    handleDialogClose = () => {
+    handleDetailButton = ({ index }) => {
+        this.setState({
+            DetailOpen: true,
+            DetailChar: index
+        });
+    };
+
+    handleDialogClose = saved => {
         this.setState({ ACDialogOpen: false });
+        saved && window.location.reload();
+    };
+
+    handleDetailClose = () => {
+        this.setState({ DetailOpen: false });
     };
 
     componentDidMount() {}
@@ -70,8 +95,8 @@ class MemberView extends React.Component {
             user.action = this.addRoleBtn.call(this, { index: user });
             user.characters &&
                 user.characters.map(char => {
-                    char.action = this.addRoleBtn.call(this, {
-                        index: char.esi_id
+                    char.action = this.addCharBtn.call(this, {
+                        index: char
                     });
                     char.owner = user.chinese_alias;
                 });
@@ -110,11 +135,18 @@ class MemberView extends React.Component {
                     <TableRowDetail contentComponent={MemberRowDetail} />
                     <TableFilterRow />
                 </Grid>
-                {this.state.ACuser && (
+                {this.state.ACDialogOpen && this.state.ACuser && (
                     <AccessControlDialog
                         onClose={this.handleDialogClose}
                         open={this.state.ACDialogOpen}
                         user={this.state.ACuser}
+                    />
+                )}
+                {this.state.DetailOpen && this.state.DetailChar && (
+                    <CharacterDetailDialog
+                        onClose={this.handleDetailClose}
+                        open={this.state.DetailOpen}
+                        char={this.state.DetailChar}
                     />
                 )}
             </div>

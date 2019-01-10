@@ -28,8 +28,7 @@ class CharacterView extends React.Component {
                     { name: "name", title: "角色名" },
                     { name: "esi_id", title: "ESI ID" },
                     { name: "add_on", title: "注册于" },
-                    { name: "owner", title: "拥有者" },
-                    { name: "action", title: "action" }
+                    { name: "owner", title: "拥有者" }
                 ]}
             >
                 <FilteringState

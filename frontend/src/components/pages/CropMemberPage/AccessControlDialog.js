@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
-import blue from "@material-ui/core/colors/blue";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -32,6 +31,15 @@ const styles = theme => ({
 });
 
 class AccessControlDialog extends React.Component {
+    state = {
+        fc: false,
+        director: false,
+        hr: false,
+        button: false,
+        success: false,
+        progress: false
+    };
+
     constructor(props) {
         super(props);
     }
@@ -58,7 +66,9 @@ class AccessControlDialog extends React.Component {
     };
 
     handleClose = () => {
-        this.props.onClose();
+        this.state.success
+            ? this.props.onClose(true)
+            : this.props.onClose(false);
     };
 
     handleSaveChange = () => {
