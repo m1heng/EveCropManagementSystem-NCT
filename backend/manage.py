@@ -23,6 +23,9 @@ manager.add_command('db', MigrateCommand)
 def run():
     app.run()
 
+@manager.command
+def run_dev():
+    app.run(host='0.0.0.0')
 
 @manager.command
 def test():
