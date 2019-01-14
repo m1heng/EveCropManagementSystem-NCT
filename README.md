@@ -1,8 +1,8 @@
 ## TODO
 ### Frontend
 #### Dashboard Mainpage
-- [ ] UserInfo update dialog
-- [ ] Reset Password dialog
+- [x] UserInfo update dialog
+- [x] Reset Password dialog
 - [ ] Application Card in dashboard 
 #### Management Pages
 - [ ] HR page
