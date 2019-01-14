@@ -4,6 +4,7 @@ import datetime
 from app.main import db
 from app.main.model.user import User
 
+
 def login_user(json_data):
     try:
         # fetch the user data
@@ -34,40 +35,40 @@ def login_user(json_data):
 
 
 def register_user(json_data):
-    #check for user existence
+    # check for user existence
     existing_user = User.query.filter_by(email=json_data['email']).first()
     if existing_user:
         response_body = {
-            'status' : 'fail',
-            'duplicate' : 'email'
+            'status': 'fail',
+            'duplicate': 'email'
         }
         return response_body, 409
     existing_user = User.query.filter_by(email=json_data['qq']).first()
     if existing_user:
         response_body = {
-            'status' : 'fail',
-            'duplicate' : 'qq'
+            'status': 'fail',
+            'duplicate': 'qq'
         }
         return response_body, 409
 
-    #try add new user into db
+    # try add new user into db
     try:
         new_user = User(
-            public_id = str(uuid.uuid4()),
-            email = json_data['email'],
-            registered_on = datetime.datetime.utcnow(),
-            password = json_data['password'],
-            chinese_alias = json_data['chinese_alias'],
-            english_alias = json_data['english_alias'],
-            qq = json_data['qq'],
-            member = True) # before hr part is working 
+            public_id=str(uuid.uuid4()),
+            email=json_data['email'],
+            registered_on=datetime.datetime.utcnow(),
+            password=json_data['password'],
+            chinese_alias=json_data['chinese_alias'],
+            english_alias=json_data['english_alias'],
+            qq=json_data['qq'],
+            member=True)  # before hr part is working
 
         db.session.add(new_user)
         db.session.commit()
 
         response_body = {
-            'status' : 'success',
-            'message' : 'Successfully registered. Please login.'
+            'status': 'success',
+            'message': 'Successfully registered. Please login.'
         }
 
         return response_body, 200
@@ -80,10 +81,13 @@ def register_user(json_data):
         }
         return response_body, 500
 
+
 """
 json_data: request body 
 current_user: user object from login decrator
 """
+
+
 def reset_pass(json_data, current_user):
     old_pass = json_data['old_pass']
     new_pass = json_data['new_pass']
@@ -103,18 +107,21 @@ def reset_pass(json_data, current_user):
     }
     return response_body, 200
 
+
 """
 json_data: role name and it's new value
 target_user_pid: target user's publid id
 """
-def role_operation(json_data,target_user_pid):
 
-    target_user = User.query.filter_by(public_id = target_user_pid).first()
+
+def role_operation(json_data, target_user_pid):
+
+    target_user = User.query.filter_by(public_id=target_user_pid).first()
 
     if not target_user:
         response_body = {
-            'status' : 'fail',
-            'message' : 'target user not exists'
+            'status': 'fail',
+            'message': 'target user not exists'
         }
         return response_body, 404
 
@@ -131,7 +138,7 @@ def role_operation(json_data,target_user_pid):
 
     response_body = {
         'status': 'success',
-        'message' : 'tagert user role is changed'
+        'message': 'tagert user role is changed'
     }
     return response_body, 200
 
@@ -164,5 +171,3 @@ def get_current_user(new_request):
             'message': 'Provide a valid auth token.'
         }
         return response_object, 401
-
-   

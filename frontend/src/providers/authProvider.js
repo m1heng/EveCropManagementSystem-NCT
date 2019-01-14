@@ -40,17 +40,17 @@ function logout() {
     localStorage.removeItem("pid");
     localStorage.removeItem("role");
     localStorage.removeItem("exp");
-    window.location.reload();
 }
 
 function isLoggedIn() {
-    if (!isNotExpired()) {
+    if (!isNotExpired() || !localStorage.getItem("token")) {
         logout();
+        return false;
     }
+    return true;
 }
 
 function isDirector() {
-    console.log(isNotExpired());
     const current_role = localStorage.getItem("role");
     return current_role.includes("director");
 }
@@ -83,5 +83,6 @@ export const authProvider = {
     isFC,
     isHR,
     isMember,
-    isNotExpired
+    isNotExpired,
+    isLoggedIn
 };

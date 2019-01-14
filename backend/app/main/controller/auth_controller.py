@@ -23,12 +23,14 @@ class Register(Resource):
         post_data = request.json
         return register_user(post_data)
 
+
 @api.route('/resetpassword')
 class Resetpassword(Resource):
     @login_required
     def put(current_user, self):
-        data =request.json
+        data = request.json
         return reset_pass(data, current_user)
+
 
 @api.route('/roleoperation/<pid>')
 class RoleOp(Resource):
@@ -36,5 +38,3 @@ class RoleOp(Resource):
     def put(current_user, self, pid):
         data = request.json
         return role_operation(data, pid)
-
-    

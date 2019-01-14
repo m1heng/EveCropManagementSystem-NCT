@@ -6,7 +6,7 @@ export const LoginRoute = ({ component: Component, ...rest }) => (
     <Route
         {...rest}
         render={props =>
-            localStorage.getItem("token") ? (
+            authProvider.isLoggedIn() ? (
                 <Component {...props} />
             ) : (
                 <Redirect

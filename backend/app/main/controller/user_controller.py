@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from app.main.util.decorator import admin_required, director_required, login_required
 from ..util.dto import UserDto
-from ..service.user_service import get_all_users, get_a_user
+from ..service.user_service import get_all_users, get_a_user, update_user_info
 
 api = UserDto.api
 _user = UserDto.user

@@ -154,11 +154,56 @@ function updateRole(pid, new_roles) {
         });
 }
 
+function updateUserinfo({ chinese_alias, english_alias, qq }) {
+    const pid = localStorage.getItem("pid");
+    const current_token = localStorage.getItem("token");
+    return axios({
+        headers: { "x-access-token": current_token },
+        url: `${NCT_API_URL}/users/${pid}`,
+        method: "put",
+        data: {
+            chinese_alias: chinese_alias,
+            english_alias: english_alias,
+            qq: qq
+        }
+    })
+        .then(response => {
+            return response.data;
+        })
+        .catch(err => {
+            console.log(err);
+            return Promise.reject();
+        });
+}
+
+function resetPassword(old_pass, new_pass) {
+    const pid = localStorage.getItem("pid");
+    const token = localStorage.getItem("token");
+    return axios({
+        headers: { "x-access-token": token },
+        url: `${NCT_API_URL}/auth/resetpassword`,
+        method: "put",
+        data: {
+            old_pass: old_pass,
+            new_pass: new_pass
+        }
+    })
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(err => {
+            console.log(err);
+            return Promise.reject();
+        });
+}
+
 export const nctProvider = {
     getUserInfo,
     getCharList,
     deleteChar,
     getUserList,
     getAllCharList,
-    updateRole
+    updateRole,
+    updateUserinfo,
+    resetPassword
 };

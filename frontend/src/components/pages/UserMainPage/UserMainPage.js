@@ -41,7 +41,7 @@ class UserMainPage extends React.Component {
             <div className={classes.root}>
                 <Grid container spacing={24}>
                     <Grid item xs={4}>
-                        <UserInfo user={user} />
+                        {user && <UserInfo user={user} />}
                     </Grid>
                     <Grid item xs={8}>
                         <CharacterList charcters={charlist} />

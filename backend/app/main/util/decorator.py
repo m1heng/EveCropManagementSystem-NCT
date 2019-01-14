@@ -9,8 +9,8 @@ from app.main.model.user import User
 
 def vaildate_token(request_header):
     response_body = {
-        'status' : 'fail',
-        'message' : ''
+        'status': 'fail',
+        'message': ''
     }
 
     if 'x-access-token' not in request_header:
@@ -21,7 +21,7 @@ def vaildate_token(request_header):
 
     try:
         pid = jwt.decode(token, key)['pid']
-        current_user = User.query.filter_by(public_id = pid).first()
+        current_user = User.query.filter_by(public_id=pid).first()
     except Exception as e:
         response_body['message'] = str(e)
         return response_body, 401
@@ -32,10 +32,13 @@ def vaildate_token(request_header):
 
     return current_user, 200
 
+
 '''
 decorator for login required. Normal User role.
 current_user must be added as a parameter to wrapped function
 '''
+
+
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -57,12 +60,12 @@ def admin_required(f):
 
         if not current_user.admin:
             response_body = {
-                'status' : 'fail',
-                'message' : 'admin role required'
+                'status': 'fail',
+                'message': 'admin role required'
             }
             return response_body, 401
 
-        return f(current_user,*args, **kwargs)
+        return f(current_user, *args, **kwargs)
 
     return decorated
 
@@ -76,14 +79,11 @@ def director_required(f):
 
         if not current_user.director:
             response_body = {
-                'status' : 'fail',
-                'message' : 'director role required'
+                'status': 'fail',
+                'message': 'director role required'
             }
             return response_body, 401
 
-        return f(current_user,*args, **kwargs)
+        return f(current_user, *args, **kwargs)
 
     return decorated
-
-
-
