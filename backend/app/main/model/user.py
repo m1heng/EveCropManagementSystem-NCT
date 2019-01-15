@@ -30,7 +30,7 @@ class User(db.Model):
     director = db.Column(db.Boolean, default=False)
     admin = db.Column(db.Boolean, default=False)
 
-    password_hash = db.Column(db.String(64), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
     chinese_alias = db.Column(db.String(50), unique = True)
     english_alias = db.Column(db.String(50), unique = True)

@@ -50,6 +50,20 @@ def register_user(json_data):
             'duplicate': 'qq'
         }
         return response_body, 409
+    existing_user = User.query.filter_by(email=json_data['chinese_alias']).first()
+    if existing_user:
+        response_body = {
+            'status': 'fail',
+            'duplicate': 'chinese_alias'
+        }
+        return response_body, 409
+    existing_user = User.query.filter_by(email=json_data['english_alias']).first()
+    if existing_user:
+        response_body = {
+            'status': 'fail',
+            'duplicate': 'english_alias'
+        }
+        return response_body, 409
 
     # try add new user into db
     try:

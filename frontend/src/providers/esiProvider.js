@@ -67,7 +67,7 @@ function characterIDtoInfo(char_id) {
         });
 }
 
-function locationIDtoName(loc_id, refresh_response_data) {
+async function locationIDtoName(loc_id, refresh_response_data) {
     if (loc_id < 2147483647) return getNamebyId(loc_id);
     return cachedAxios({
         url: `${ESI_BASE_URL}/latest/universe/structures/${loc_id}`,
@@ -165,6 +165,72 @@ function getCharWallet(character, refresh_response_data, page_num) {
         });
 }
 
+function getCharSkills(character, refresh_response_data) {
+    if (!refresh_response_data) {
+        return getAccessToken(character.esi_refresh_token)
+            .then(resp => {
+                return getCharSkills(character, resp);
+            })
+            .catch(err => {
+                return Promise.reject();
+            });
+    }
+    return Axios({
+        url: `${ESI_BASE_URL}/latest/characters/${character.esi_id}/skills/`,
+        method: "get",
+        headers: {
+            Authorization: `${refresh_response_data.token_type} ${
+                refresh_response_data.access_token
+            }`,
+            Accept: "application/json"
+        }
+    })
+        .then(resp => {
+            return resp.data.skills;
+        })
+        .catch(err => {
+            return Promise.reject();
+        });
+}
+
+function getCharAssets(character, refresh_response_data, page_num) {
+    if (!refresh_response_data) {
+        return getAccessToken(character.esi_refresh_token)
+            .then(resp => {
+                return getCharAssets(character, resp, page_num);
+            })
+            .catch(err => {
+                return Promise.reject();
+            });
+    }
+    return Axios({
+        url: `${ESI_BASE_URL}/latest/characters/${character.esi_id}/assets/`,
+        method: "get",
+        headers: {
+            Authorization: `${refresh_response_data.token_type} ${
+                refresh_response_data.access_token
+            }`,
+            Accept: "application/json"
+        },
+        data: querystring.stringify({ page: page_num })
+    })
+        .then(resp => {
+            if (resp.headers["x-pages"] != page_num) {
+                return resp.data.push(
+                    ...getCharAssets(
+                        character,
+                        refresh_response_data,
+                        page_num + 1
+                    )
+                );
+            }
+            return resp.data;
+        })
+        .catch(err => {
+            return Promise.reject();
+        });
+}
+
 export const esiProvider = {
     getCharContracts,
     characterIDtoInfo,
@@ -172,5 +238,7 @@ export const esiProvider = {
     getAccessToken,
     getNamebyId,
     getCharWallet,
-    getNamesbyIds
+    getNamesbyIds,
+    getCharSkills,
+    getCharAssets
 };

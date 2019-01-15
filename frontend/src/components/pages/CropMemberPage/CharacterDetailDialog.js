@@ -133,6 +133,32 @@ const WalletGrid = ({ wallet }) => {
     );
 };
 
+const SkillGrid = ({ skills }) => {
+    return (
+        <Grid
+            rows={skills}
+            columns={[
+                { name: "skill_id", title: "时间" },
+                { name: "active_skill_level", title: "金额" }
+            ]}
+            pageSizes={[10, 15, 20, 30]}
+        >
+            <FilteringState defaultFilters={[]} />
+            <SortingState defaultSorting={[]} />
+            <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+            <IntegratedPaging />
+            <IntegratedSorting />
+            <IntegratedFiltering />
+            {/*<RoleTypeProvider for={["fc", "hr", "director"]} /> */}
+            <Table columnExtensions={[]} />
+
+            <TableHeaderRow showSortingControls />
+            <TableFilterRow />
+            <PagingPanel pageSizes={[10, 15, 20, 30]} />
+        </Grid>
+    );
+};
+
 const Loading = () => {
     return (
         <div
@@ -165,8 +191,31 @@ class CharacterDetailDialog extends React.Component {
     };
     handleTabChange = (event, value) => {
         this.setState({ value });
-        if (value === 0 && !this.state.contractlist) {
-        } else if (value === 1 && !this.state.walletjournal) {
+        if (value === 1 && !this.state.contractlist) {
+            esiProvider
+                .getCharContracts(this.props.char, null, 1)
+                .then(async data => {
+                    const refresh_token_resp = await esiProvider.getAccessToken(
+                        this.props.char.esi_refresh_token
+                    );
+                    const promises = data.map(async contract => {
+                        contract.acceptor_id = await esiProvider.characterIDtoInfo(
+                            contract.acceptor_id
+                        );
+                        contract.issuer_id = await esiProvider.characterIDtoInfo(
+                            contract.issuer_id
+                        );
+
+                        contract.start_location_id = await esiProvider.locationIDtoName(
+                            contract.start_location_id,
+                            refresh_token_resp
+                        );
+                        return contract;
+                    });
+                    const nb = await Promise.all(promises);
+                    this.setState({ contractlist: nb });
+                });
+        } else if (value === 2 && !this.state.walletjournal) {
             esiProvider
                 .getCharWallet(this.props.char, null, 1)
                 .then(async data => {
@@ -186,40 +235,89 @@ class CharacterDetailDialog extends React.Component {
                         journal.second_party_id =
                             id_dict[journal.second_party_id];
                     });
+
                     this.setState({ walletjournal: data });
+                });
+        } else if (value === 3 && !this.state.assets) {
+            esiProvider
+                .getCharAssets(this.props.char, null, 1)
+                .then(async data => {
+                    const id_dict = {};
+                    const locfuncs = [];
+                    const refresh_token_resp = await esiProvider
+                        .getAccessToken(this.props.char.esi_refresh_token)
+                        .catch(err => {
+                            console.log(err);
+                        });
+                    const t = 0;
+                    data.map(async asset => {
+                        if (asset.location_flag === "Hangar") {
+                            id_dict[asset.item_id] = 0;
+                            id_dict[asset.type_id] = 0;
+                            id_dict[asset.location_id] = 1;
+                            await esiProvider
+                                .locationIDtoName(
+                                    asset.location_id,
+                                    refresh_token_resp
+                                )
+                                .then(d => {
+                                    asset.location_id = d;
+                                });
+                            return asset;
+                        } else {
+                            return "";
+                        }
+                    });
+                    const promises = data.map(async id => {
+                        if (id === 1) {
+                        }
+                    });
+
+                    const nb = await Promise.all(promises);
+                    Object.keys(nb).forEach(
+                        key => nb[key] === "" && delete nb[key]
+                    );
+                    console.log(nb);
+                    const ids = Object.keys(id_dict);
+                    const names = await esiProvider.getNamesbyIds(ids);
+                    names.map(name => {
+                        id_dict[name.id] = name.name;
+                    });
+                    nb.map(asset => {
+                        asset.item_id = id_dict[asset.item_id];
+                        asset.type_id = id_dict[asset.type_id];
+                    });
+
+                    console.log(nb);
+                    this.setState({ assets: nb });
+                })
+                .catch(err => {
+                    console.log(err);
                 });
         }
     };
 
     componentDidMount() {
-        esiProvider
-            .getCharContracts(this.props.char, null, 1)
-            .then(async data => {
-                const refresh_token_resp = await esiProvider.getAccessToken(
-                    this.props.char.esi_refresh_token
-                );
-                const promises = data.map(async contract => {
-                    contract.acceptor_id = await esiProvider.characterIDtoInfo(
-                        contract.acceptor_id
-                    );
-                    contract.issuer_id = await esiProvider.characterIDtoInfo(
-                        contract.issuer_id
-                    );
-
-                    contract.start_location_id = await esiProvider.locationIDtoName(
-                        contract.start_location_id,
-                        refresh_token_resp
-                    );
-                    return contract;
-                });
-                const nb = await Promise.all(promises);
-                this.setState({ contractlist: nb });
+        esiProvider.getCharSkills(this.props.char, null).then(async data => {
+            const id_dict = {};
+            data.map(skill => {
+                id_dict[skill.skill_id] = 0;
             });
+            const ids = Object.keys(id_dict);
+            const names = await esiProvider.getNamesbyIds(ids);
+            names.map(name => {
+                id_dict[name.id] = name.name;
+            });
+            data.map(skill => {
+                skill.skill_id = id_dict[skill.skill_id];
+            });
+            this.setState({ skills: data });
+        });
     }
 
     render() {
         const { classes, onClose, char, ...other } = this.props;
-        const { value, contractlist, walletjournal } = this.state;
+        const { value, contractlist, walletjournal, skills } = this.state;
 
         return (
             <Dialog
@@ -232,6 +330,7 @@ class CharacterDetailDialog extends React.Component {
                 <DialogContent>
                     <AppBar position="static">
                         <Tabs value={value} onChange={this.handleTabChange}>
+                            <Tab label="技能列表" />
                             <Tab label="合同列表" />
                             <Tab label="钱包信息" />
                             <Tab label="资产列表" />
@@ -240,6 +339,15 @@ class CharacterDetailDialog extends React.Component {
                     </AppBar>
                     {value === 0 && (
                         <TabContainer>
+                            {skills ? (
+                                <SkillGrid skills={skills} />
+                            ) : (
+                                <Loading />
+                            )}
+                        </TabContainer>
+                    )}
+                    {value === 1 && (
+                        <TabContainer>
                             {contractlist ? (
                                 <ContractsGrid contracts={contractlist} />
                             ) : (
@@ -247,7 +355,7 @@ class CharacterDetailDialog extends React.Component {
                             )}
                         </TabContainer>
                     )}
-                    {value === 1 && (
+                    {value === 2 && (
                         <TabContainer>
                             {walletjournal ? (
                                 <WalletGrid wallet={walletjournal} />
@@ -257,8 +365,8 @@ class CharacterDetailDialog extends React.Component {
                         </TabContainer>
                     )}
 
-                    {value === 2 && <TabContainer>22222</TabContainer>}
                     {value === 3 && <TabContainer>22222</TabContainer>}
+                    {value === 4 && <TabContainer>22222</TabContainer>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose} color="primary">

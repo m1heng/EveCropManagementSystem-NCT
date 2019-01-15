@@ -119,6 +119,11 @@ class DashboardFrame extends React.Component {
         this.setState({ open: false });
     };
 
+    handleLogout = () => {
+        authProvider.logout();
+        window.location.reload();
+    };
+
     render() {
         const { classes } = this.props;
         return (
@@ -155,10 +160,7 @@ class DashboardFrame extends React.Component {
                         >
                             九州 ESI 系统
                         </Typography>
-                        <IconButton
-                            onClick={authProvider.logout}
-                            color="inherit"
-                        >
+                        <IconButton onClick={this.handleLogout} color="inherit">
                             登出
                         </IconButton>
                     </Toolbar>

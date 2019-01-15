@@ -13,4 +13,4 @@ class Character(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(50), unique=True, nullable=False)
     add_on = db.Column(db.DateTime, nullable=False)
-    esi_refresh_token = db.Column(db.String(255), unique=True, nullable=False)
+    esi_refresh_token = db.Column(db.String(450), unique=True, nullable=False)

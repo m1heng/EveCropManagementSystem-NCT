@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { NCT_API_URL } from "Constants";
-import decodeJwt from "jwt-decode";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -46,6 +45,7 @@ class ESIcallback extends Component {
                     esi_access_token: response.data.access_token,
                     esi_refresh_token: response.data.refresh_token
                 };
+                console.log(AuthResponse.esi_refresh_token.length);
                 return AuthResponse;
             })
             .then(AuthResponse => {

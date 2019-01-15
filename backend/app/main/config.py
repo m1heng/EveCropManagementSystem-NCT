@@ -9,8 +9,9 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'EveCropManagement_main.db')
+    DEBUG = True 
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'EveCropManagement_main.db')
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://dev-local:Yuhh0531@35.220.216.176/nctdev'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
