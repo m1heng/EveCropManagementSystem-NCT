@@ -31,7 +31,7 @@ PyJWT == 1.7.1
 
 # migrations\env.py: 3
 # migrations\versions\f9a5e06a82ad_init.py: 9
-SQLAlchemy == 1.2.15
+SQLAlchemy >= 1.3.0
 
 # api.py: 8
 # app\main\model\user.py: 5
